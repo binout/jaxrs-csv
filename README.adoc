@@ -1,0 +1,58 @@
+= Jaxrs-csv
+
+A JAX-RS provider to manage `text/csv` media type
+
+== MessageBodyWriter/Reader
+
+The project provides an instance of `MessageBodyReader` and `MessageBodyWriter` for `text/csv`.
+
+=== Example of resource
+
+[source, java]
+----
+@Path("/persons")
+public class PersonResouce {
+
+    private static List<Person> repository = new ArrayList<>();
+
+    @GET
+    @Produces("text/csv")
+    public Response get() {
+        return Response.ok(repository).build();
+    }
+
+    @POST
+    @Consumes("text/csv")
+    public Response post(List<Person> persons) {
+        repository.addAll(persons);
+        return Response.ok().build();
+    }
+}
+----
+
+== Implementation choices
+
+* Use of https://github.com/FasterXML/jackson-dataformat-csv[jackson-dataformat-csv] to map CSV format
+* Need to define schema in POJO with jackson annotaton :
+
+[source, java]
+----
+@JsonPropertyOrder({ "firstName", "lastName", "age" })
+public class Person {
+
+    private String firstName;
+    private String lastName;
+    private int age;
+}
+----
+
+* Default CSV separator is : `;`
+
+== TODO
+
+* Add Arquillian integration tests
+* Add an annotation to override the default separator
+* Add a way (file, programmatic ?) to define CSV schema for POJO :
+** order of column
+** header or not
+** skip 1st row
