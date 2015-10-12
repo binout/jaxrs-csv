@@ -18,6 +18,7 @@ package io.github.binout.jaxrs.csv;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 interface AnnotationUtils {
 
@@ -33,5 +34,18 @@ interface AnnotationUtils {
             }
         }
         return sep;
+    }
+
+    static Optional<String[]> columnOrder(Class csvClass) {
+        Annotation orderAnnotation = csvClass.getAnnotation(CsvColumnOrder.class);
+        if (orderAnnotation != null) {
+            Method method = orderAnnotation.annotationType().getDeclaredMethods()[0];
+            try {
+                return Optional.of((String[]) method.invoke(orderAnnotation, (Object[])null));
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return Optional.empty();
     }
 }

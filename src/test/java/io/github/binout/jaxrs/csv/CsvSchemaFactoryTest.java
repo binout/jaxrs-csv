@@ -30,23 +30,10 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CsvMapperTest {
-
-    static String inputStreamToString(InputStream is) throws IOException {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            return br.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
-    }
+public class CsvSchemaFactoryTest {
 
     CsvMapper mapper = new CsvMapper();
-    /*CsvSchema schema = CsvSchema.builder()
-            .addColumn("firstName")
-            .addColumn("lastName")
-            .addColumn("age", CsvSchema.ColumnType.NUMBER)
-            .setColumnSeparator(';')
-            .build(); */
-    CsvSchema schema = mapper.schemaFor(Person.class).withColumnSeparator(';');
-
+    CsvSchema schema = CsvSchemaFactory.buildSchema(mapper, Person.class);
 
     @Test
     public void test_reader() throws IOException {
@@ -73,5 +60,11 @@ public class CsvMapperTest {
         assertThat(mapper.writer(schema).writeValueAsString(Arrays.asList(lucas, benoit))).isEqualToIgnoringWhitespace(
                 "Lucas;Prioux;2\n" +
                 "Benoit;Prioux;33");
+    }
+
+    static String inputStreamToString(InputStream is) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+            return br.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
     }
 }

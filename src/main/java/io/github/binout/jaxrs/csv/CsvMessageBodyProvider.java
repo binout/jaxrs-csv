@@ -61,7 +61,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     public Object readFrom(Class<Object> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
         CsvMapper mapper = new CsvMapper();
         Class csvClass = (Class) (((ParameterizedType) type).getActualTypeArguments())[0];
-        CsvSchema schema = buildSchema(mapper, csvClass);
+        CsvSchema schema = CsvSchemaFactory.buildSchema(mapper, csvClass);
         return mapper.reader(csvClass).with(schema).readValues(inputStream).readAll();
     }
 
@@ -69,7 +69,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     public void writeTo(Object o, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> multivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
         CsvMapper mapper = new CsvMapper();
         String body = objectClass(o, aClass).map(csvClass -> {
-            CsvSchema schema = buildSchema(mapper, csvClass);
+            CsvSchema schema = CsvSchemaFactory.buildSchema(mapper, csvClass);
             try {
                 return mapper.writer(schema).writeValueAsString(o);
             } catch (JsonProcessingException e) {
@@ -92,11 +92,6 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
             csvClass = Optional.of(aClass);
         }
         return csvClass;
-    }
-
-    private CsvSchema buildSchema(CsvMapper mapper, Class csvClass) {
-        char separatorChar = AnnotationUtils.separatorChar(csvClass);
-        return mapper.schemaFor(csvClass).withColumnSeparator(separatorChar);
     }
 
 }

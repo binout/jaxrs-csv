@@ -44,6 +44,7 @@ public class IntegrationTest extends Arquillian {
                 // Framework
                 .addClass(CsvMessageBodyProvider.class)
                 .addClass(CsvSeparator.class)
+                .addClass(CsvColumnOrder.class)
                 .addClass(AnnotationUtils.class)
                 .addAsLibraries(jacksonCsv)
                  // Test

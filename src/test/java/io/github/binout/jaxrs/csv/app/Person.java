@@ -15,9 +15,9 @@
  */
 package io.github.binout.jaxrs.csv.app;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.github.binout.jaxrs.csv.CsvColumnOrder;
 
-@JsonPropertyOrder({ "firstName", "lastName", "age" })
+@CsvColumnOrder({ "firstName", "lastName", "age" })
 public class Person {
 
     private String firstName;
