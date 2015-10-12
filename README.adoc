@@ -50,7 +50,6 @@ public class Person {
 
 == TODO
 
-* Add Arquillian integration tests
 * Add an annotation to override the default separator
 * Add a way (file, programmatic ?) to define CSV schema for POJO :
 ** order of column

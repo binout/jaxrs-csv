@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/persons")
-public class PersonResouce {
+public class PersonResource {
 
     private static List<Person> repository = new ArrayList<>();
 
