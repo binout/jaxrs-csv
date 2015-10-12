@@ -16,6 +16,7 @@
 package io.github.binout.jaxrs.csv;
 
 import com.github.kevinsawicki.http.HttpRequest;
+import io.github.binout.jaxrs.csv.app.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -31,7 +32,8 @@ import java.net.URL;
 
 public class IntegrationTest extends Arquillian {
 
-    public static final String CSV = "Lucas;Prioux;2\n" + "Benoit;Prioux;33\n";
+    static final String CSV_PERSONS = "Lucas;Prioux;2\n" + "Benoit;Prioux;33\n";
+    static final String CSV_DOGS = "labrador,medor\n" + "setter,izidor\n";
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -39,11 +41,17 @@ public class IntegrationTest extends Arquillian {
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.1").withTransitivity().asFile();
 
         return ShrinkWrap.create(WebArchive.class)
+                // Framework
                 .addClass(CsvMessageBodyProvider.class)
+                .addClass(CsvSeparator.class)
+                .addClass(AnnotationUtils.class)
+                .addAsLibraries(jacksonCsv)
+                 // Test
                 .addClass(JaxRsApp.class)
                 .addClass(Person.class)
                 .addClass(PersonResource.class)
-                .addAsLibraries(jacksonCsv);
+                .addClass(Dog.class)
+                .addClass(DogResource.class);
     }
 
     @ArquillianResource
@@ -51,7 +59,7 @@ public class IntegrationTest extends Arquillian {
 
     @Test
     @RunAsClient
-    public void GetAndPostAndGet() {
+    public void getAndPostAndGet() {
         String personsUrl = baseURL + "rest/persons";
 
         // First GET : empty repository
@@ -60,12 +68,22 @@ public class IntegrationTest extends Arquillian {
         Assert.assertEquals(getEmpty.body(), "");
 
         // POST csv body
-        HttpRequest post = HttpRequest.post(personsUrl).contentType("text/csv").send(CSV);
+        HttpRequest post = HttpRequest.post(personsUrl).contentType("text/csv").send(CSV_PERSONS);
         Assert.assertEquals(post.code(), 200);
 
         // Znd GET : retrieve csv
         HttpRequest get = HttpRequest.get(personsUrl).accept("text/csv");
         Assert.assertEquals(get.code(), 200);
-        Assert.assertEquals(get.body(), CSV);
+        Assert.assertEquals(get.body(), CSV_PERSONS);
+    }
+
+    @Test
+    @RunAsClient
+    public void getWithCsvSeparator() {
+        String personsUrl = baseURL + "rest/dogs";
+
+        HttpRequest get = HttpRequest.get(personsUrl).accept("text/csv");
+        Assert.assertEquals(get.code(), 200);
+        Assert.assertEquals(get.body(), CSV_DOGS);
     }
 }

@@ -15,18 +15,11 @@
  */
 package io.github.binout.jaxrs.csv;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.annotation.*;
 
-@ApplicationPath("/rest")
-public class JaxRsApp extends Application {
-
-    @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
-        classes.add(PersonResource.class);
-        return classes;
-    }
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface CsvSeparator {
+    char value();
 }

@@ -13,38 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.binout.jaxrs.csv;
+package io.github.binout.jaxrs.csv.app;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.github.binout.jaxrs.csv.CsvSeparator;
 
-@JsonPropertyOrder({ "firstName", "lastName", "age" })
-public class Person {
+@JsonPropertyOrder({ "race", "name" })
+@CsvSeparator(',')
+public class Dog {
 
-    private String firstName;
-    private String lastName;
-    private int age;
+    private String name;
+    private String race;
 
-    public String getFirstName() {
-        return firstName;
+    public Dog(String name, String race) {
+        this.name = name;
+        this.race = race;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getName() {
+        return name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public String getRace() {
+        return race;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
+    public void setRace(String race) {
+        this.race = race;
     }
 }

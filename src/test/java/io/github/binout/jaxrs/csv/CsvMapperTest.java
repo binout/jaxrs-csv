@@ -18,6 +18,7 @@ package io.github.binout.jaxrs.csv;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import io.github.binout.jaxrs.csv.app.Person;
 import org.testng.annotations.Test;
 
 import java.io.BufferedReader;

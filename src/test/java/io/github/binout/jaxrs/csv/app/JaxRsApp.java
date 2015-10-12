@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.binout.jaxrs.csv;
+package io.github.binout.jaxrs.csv.app;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-@Path("/persons")
-public class PersonResource {
+@ApplicationPath("/rest")
+public class JaxRsApp extends Application {
 
-    private static List<Person> repository = new ArrayList<>();
-
-    @GET
-    @Produces("text/csv")
-    public Response get() {
-        return Response.ok(repository).build();
-    }
-
-    @POST
-    @Consumes("text/csv")
-    public Response post(List<Person> persons) {
-        repository.addAll(persons);
-        return Response.ok().build();
-    }
 }

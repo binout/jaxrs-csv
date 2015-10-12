@@ -61,7 +61,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     public Object readFrom(Class<Object> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
         CsvMapper mapper = new CsvMapper();
         Class csvClass = (Class) (((ParameterizedType) type).getActualTypeArguments())[0];
-        CsvSchema schema = mapper.schemaFor(csvClass).withColumnSeparator(';');
+        CsvSchema schema = buildSchema(mapper, csvClass);
         return mapper.reader(csvClass).with(schema).readValues(inputStream).readAll();
     }
 
@@ -69,7 +69,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
     public void writeTo(Object o, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> multivaluedMap, OutputStream outputStream) throws IOException, WebApplicationException {
         CsvMapper mapper = new CsvMapper();
         String body = objectClass(o, aClass).map(csvClass -> {
-            CsvSchema schema = mapper.schemaFor(csvClass).withColumnSeparator(';');
+            CsvSchema schema = buildSchema(mapper, csvClass);
             try {
                 return mapper.writer(schema).writeValueAsString(o);
             } catch (JsonProcessingException e) {
@@ -79,7 +79,7 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
         outputStream.write(body.getBytes(StandardCharsets.UTF_8));
     }
 
-    Optional<Class> objectClass(Object o, Class<?> aClass) {
+    private Optional<Class> objectClass(Object o, Class<?> aClass) {
         Optional<Class> csvClass;
         if (o instanceof Collection) {
             Collection collection = (Collection) o;
@@ -93,4 +93,10 @@ public class CsvMessageBodyProvider implements MessageBodyReader<Object>, Messag
         }
         return csvClass;
     }
+
+    private CsvSchema buildSchema(CsvMapper mapper, Class csvClass) {
+        char separatorChar = AnnotationUtils.separatorChar(csvClass);
+        return mapper.schemaFor(csvClass).withColumnSeparator(separatorChar);
+    }
+
 }
