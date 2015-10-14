@@ -23,19 +23,21 @@ import java.util.Optional;
 interface CsvSchemaFactory {
 
     static CsvSchema buildSchema(CsvMapper mapper, Class csvClass) {
-        char separatorChar = AnnotationUtils.separatorChar(csvClass);
+        CsvAnnotationIntrospector introspector = new CsvAnnotationIntrospector(csvClass);
+        char separatorChar = introspector.separator();
+        Optional<String[]> columns = introspector.columns();
+
         CsvSchema csvSchema = mapper.schemaFor(csvClass).withColumnSeparator(separatorChar);
-        Optional<String[]> columnOrder = AnnotationUtils.columnOrder(csvClass);
-        if (columnOrder.isPresent()) {
-            String[] columns = columnOrder.get();
+        if (columns.isPresent()) {
             // Rebuild columns to take account of order
             CsvSchema.Builder builder = csvSchema.rebuild().clearColumns();
-            for (String column : columns) {
+            for (String column : columns.get()) {
                 CsvSchema.Column oldColumn = csvSchema.column(column);
                 builder.addColumn(column, oldColumn.getType());
             }
             csvSchema = builder.build();
         }
+
         return csvSchema;
     }
 }

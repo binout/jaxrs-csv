@@ -43,9 +43,9 @@ public class IntegrationTest extends Arquillian {
         return ShrinkWrap.create(WebArchive.class)
                 // Framework
                 .addClass(CsvMessageBodyProvider.class)
-                .addClass(CsvSeparator.class)
-                .addClass(CsvColumnOrder.class)
-                .addClass(AnnotationUtils.class)
+                .addClass(CsvSchema.class)
+                .addClass(CsvSchemaFactory.class)
+                .addClass(CsvAnnotationIntrospector.class)
                 .addAsLibraries(jacksonCsv)
                  // Test
                 .addClass(JaxRsApp.class)

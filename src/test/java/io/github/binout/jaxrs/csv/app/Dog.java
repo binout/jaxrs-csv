@@ -15,12 +15,9 @@
  */
 package io.github.binout.jaxrs.csv.app;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.github.binout.jaxrs.csv.CsvColumnOrder;
-import io.github.binout.jaxrs.csv.CsvSeparator;
+import io.github.binout.jaxrs.csv.CsvSchema;
 
-@CsvColumnOrder({ "race", "name" })
-@CsvSeparator(',')
+@CsvSchema(separator = ',', columns = { "race", "name" })
 public class Dog {
 
     private String name;

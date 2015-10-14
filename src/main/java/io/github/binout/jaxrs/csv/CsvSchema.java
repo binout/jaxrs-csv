@@ -20,6 +20,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface CsvColumnOrder {
-    String[] value() default {};
+public @interface CsvSchema {
+
+    char separator() default ';';
+
+    String[] columns() default {};
+
 }

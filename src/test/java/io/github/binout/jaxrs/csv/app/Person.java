@@ -15,9 +15,9 @@
  */
 package io.github.binout.jaxrs.csv.app;
 
-import io.github.binout.jaxrs.csv.CsvColumnOrder;
+import io.github.binout.jaxrs.csv.CsvSchema;
 
-@CsvColumnOrder({ "firstName", "lastName", "age" })
+@CsvSchema(columns = { "firstName", "lastName", "age" })
 public class Person {
 
     private String firstName;
