@@ -59,8 +59,24 @@ public class Person {
 }
 ----
 
+* You can skip the first row during parsing (default is `false`).
+Needed to support CSV-like file formats that include additional non-data content before real data begins)
+
+[source, java]
+----
+@CsvSchema(separator=',',
+           columns = { "firstName", "lastName", "age" },
+           skipFirstDataRow = true)
+public class Person {
+
+    private String firstName;
+    private String lastName;
+    private int age;
+}
+----
+
 == TODO
 
 * Configure CSV Schema
 ** header or not
-** skip 1st row
+** default value for `null` java value

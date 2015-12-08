@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Benoît Prioux
+ * Copyright 2015 Benoît Prioux
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.binout.jaxrs.csv;
+package io.github.binout.jaxrs.csv.app;
 
-import java.lang.annotation.*;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface CsvSchema {
+@Path("/cats")
+public class CatResource {
 
-    char separator() default ';';
+    private static List<Cat> repository = new ArrayList<>();
 
-    String[] columns() default {};
-
-    boolean skipFirstDataRow() default false;
-
+    @POST
+    @Consumes("text/csv")
+    public Response post(List<Cat> cats) {
+        repository.addAll(cats);
+        return Response.ok().build();
+    }
 }

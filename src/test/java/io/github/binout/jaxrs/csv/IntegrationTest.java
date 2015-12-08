@@ -34,6 +34,7 @@ public class IntegrationTest extends Arquillian {
 
     static final String CSV_PERSONS = "Lucas;Prioux;2\n" + "Benoit;Prioux;33\n";
     static final String CSV_DOGS = "labrador,medor\n" + "setter,izidor\n";
+    static final String CSV_CATS = "--a dump from a database--\n" + "guy,6\n" + "izidor,12\n";
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -52,7 +53,9 @@ public class IntegrationTest extends Arquillian {
                 .addClass(Person.class)
                 .addClass(PersonResource.class)
                 .addClass(Dog.class)
-                .addClass(DogResource.class);
+                .addClass(DogResource.class)
+                .addClass(Cat.class)
+                .addClass(CatResource.class);
     }
 
     @ArquillianResource
@@ -81,10 +84,19 @@ public class IntegrationTest extends Arquillian {
     @Test
     @RunAsClient
     public void getWithCsvSeparator() {
-        String personsUrl = baseURL + "rest/dogs";
+        String dogsUrl = baseURL + "rest/dogs";
 
-        HttpRequest get = HttpRequest.get(personsUrl).accept("text/csv");
+        HttpRequest get = HttpRequest.get(dogsUrl).accept("text/csv");
         Assert.assertEquals(get.code(), 200);
         Assert.assertEquals(get.body(), CSV_DOGS);
+    }
+
+    @Test
+    @RunAsClient
+    public void getWithSkipFirstDataRow() {
+        String catsUrl = baseURL + "rest/cats";
+
+        HttpRequest post = HttpRequest.post(catsUrl).contentType("text/csv").send(CSV_CATS);
+        Assert.assertEquals(post.code(), 200);
     }
 }

@@ -27,7 +27,9 @@ interface CsvSchemaFactory {
         char separatorChar = introspector.separator();
         Optional<String[]> columns = introspector.columns();
 
-        CsvSchema csvSchema = mapper.schemaFor(csvClass).withColumnSeparator(separatorChar);
+        CsvSchema csvSchema = mapper.schemaFor(csvClass)
+                .withColumnSeparator(separatorChar)
+                .withSkipFirstDataRow(introspector.skipFirstDataRow());
         if (columns.isPresent()) {
             // Rebuild columns to take account of order
             CsvSchema.Builder builder = csvSchema.rebuild().clearColumns();
